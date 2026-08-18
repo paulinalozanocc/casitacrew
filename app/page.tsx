@@ -404,7 +404,7 @@ export default function Home() {
                 <div style={{
                   fontFamily: "'Barlow', sans-serif",
                   fontSize: '16.5px',
-                  color: '#55524A',
+                  color: '#F2EEE5',
                   lineHeight: 1.6,
                 }}>
                   {step.description}
