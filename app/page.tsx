@@ -225,7 +225,6 @@ export default function Home() {
                 display: 'flex',
                 flexDirection: 'column',
                 gap: '8px',
-                paddingLeft: i > 0 ? '0' : '0',
                 borderLeft: i > 0 ? '1px solid #D8D2C4' : 'none',
                 paddingLeft: i > 0 ? '40px' : '0',
               }}

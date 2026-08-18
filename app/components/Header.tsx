@@ -48,16 +48,12 @@ export default function Header() {
         </Link>
 
         {/* Desktop Nav */}
-        <div style={{
-          display: 'none',
-          '@media (min-width: 1024px)': {
-            display: 'flex',
-          },
+        <div className="hidden lg:flex" style={{
           gap: '26px',
           alignItems: 'center',
           flexWrap: 'wrap',
           justifyContent: 'flex-end',
-        }} className="hidden lg:flex">
+        }}>
           <Link href="/browse" style={{
             fontFamily: "'Archivo', sans-serif",
             fontSize: '15px',
