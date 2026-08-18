@@ -1,174 +1,261 @@
-@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@700;800;900&family=Barlow:wght@400;500;600&family=Lobster+Two:ital@1&display=swap');
-
-@theme {
-  --color-navy: #1B3A6B;
-  --color-teal: #1F5C7A;
-  --color-brass: #D9A441;
-  --color-midnight: #0F1C33;
-  --color-cream: #F2EEE5;
-  --color-stone: #8A857C;
-  --color-flag-red: #C7472F;
-  --radius-lg: 0.5rem;
-}
+@import url('https://fonts.googleapis.com/css2?family=Lobster+Two:ital,wght@1,700&family=Archivo:wght@400;500;600;700;800;900&family=Barlow:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Design tokens */
+:root {
+  --color-navy: #1B3A6B;
+  --color-navy-deep: #16305A;
+  --color-teal: #1F5C7A;
+  --color-brass: #D9A441;
+  --color-midnight: #0F1C33;
+  --color-cream: #F2EEE5;
+  --color-panel: #FBF9F4;
+  --color-stone: #8A857C;
+  --color-ink-60: #55524A;
+  --color-hairline: #D8D2C4;
+  --color-hairline-inner: #E6E0D3;
+  --color-flag-red: #C7472F;
+}
+
 @layer base {
   html {
-    background-color: rgb(242, 238, 229);
-    color: rgb(15, 28, 51);
-    font-family: "Barlow", sans-serif;
+    background-color: #F2EEE5;
+    color: #0F1C33;
+    font-family: 'Barlow', sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    background-color: #F2EEE5;
+    color: #0F1C33;
+  }
+
+  h1 {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 800;
+    font-size: clamp(44px, 6.2vw, 76px);
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+  }
+
+  h2 {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 800;
+    font-size: 42px;
+    line-height: 1.08;
+    letter-spacing: -0.025em;
+  }
+
+  h3 {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 800;
+    font-size: 23px;
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+  }
+
+  p {
+    font-family: 'Barlow', sans-serif;
     font-size: 16px;
     line-height: 1.5;
   }
 
-  body {
-    background-color: rgb(242, 238, 229);
-    color: rgb(15, 28, 51);
-  }
-
-  h1, h2, h3, h4, h5, h6 {
-    font-family: "Archivo", sans-serif;
-    font-weight: 700;
-    line-height: 1.25;
-  }
-
-  h1 {
-    font-size: 2.25rem;
-    line-height: 1.1;
-    letter-spacing: -0.02em;
-  }
-
-  @media (min-width: 768px) {
-    h1 {
-      font-size: 3rem;
-    }
-  }
-
-  h2 {
-    font-size: 1.875rem;
-    line-height: 1.3;
-  }
-
-  @media (min-width: 768px) {
-    h2 {
-      font-size: 2.25rem;
-    }
-  }
-
-  h3 {
-    font-size: 1.5rem;
-  }
-
-  p {
-    font-size: 1rem;
-    line-height: 1.75;
-  }
-
-  @media (min-width: 768px) {
-    p {
-      font-size: 1.125rem;
-    }
-  }
-
   a {
-    color: rgb(27, 58, 107);
-    text-decoration: underline;
+    color: #1B3A6B;
+    text-decoration: none;
+    transition: color 200ms ease;
   }
 
   a:hover {
-    color: rgb(27, 58, 107);
+    color: #16305A;
   }
 
   button {
-    transition-property: background-color, color;
+    transition-property: background-color, color, border-color;
     transition-duration: 200ms;
+    cursor: pointer;
+  }
+
+  /* Remove default button styles */
+  button {
+    border: none;
+    font-family: inherit;
   }
 }
 
 @layer components {
+  /* Buttons */
   .btn-primary {
-    padding: 0.75rem 1.5rem;
-    background-color: rgb(27, 58, 107);
-    color: rgb(242, 238, 229);
-    font-family: "Archivo", sans-serif;
-    font-weight: 700;
-    border-radius: 0.5rem;
+    padding: 16px 28px;
+    background-color: #1B3A6B;
+    color: #F2EEE5;
+    font-family: 'Archivo', sans-serif;
+    font-weight: 800;
+    font-size: 16px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
   }
 
   .btn-primary:hover {
-    background-color: rgb(15, 28, 51);
+    background-color: #16305A;
   }
 
   .btn-secondary {
-    padding: 0.75rem 1.5rem;
-    background-color: rgb(31, 92, 122);
-    color: rgb(242, 238, 229);
-    font-family: "Archivo", sans-serif;
-    font-weight: 700;
-    border-radius: 0.5rem;
+    padding: 16px 28px;
+    background-color: #1F5C7A;
+    color: #F2EEE5;
+    font-family: 'Archivo', sans-serif;
+    font-weight: 800;
+    font-size: 16px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
   }
 
   .btn-secondary:hover {
-    background-color: rgb(22, 69, 88);
+    background-color: #164558;
   }
 
   .btn-outline {
-    padding: 0.75rem 1.5rem;
-    border: 2px solid rgb(27, 58, 107);
-    color: rgb(27, 58, 107);
-    font-family: "Archivo", sans-serif;
-    font-weight: 700;
-    border-radius: 0.5rem;
+    padding: 16px 28px;
+    border: 1.5px solid #F2EEE5;
+    color: #F2EEE5;
+    background-color: transparent;
+    font-family: 'Archivo', sans-serif;
+    font-weight: 800;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
   }
 
   .btn-outline:hover {
-    background-color: rgb(27, 58, 107);
-    color: rgb(242, 238, 229);
+    background-color: rgba(242, 238, 229, 0.1);
   }
 
+  .btn-outline-navy {
+    padding: 12px 20px;
+    border: 1.5px solid #1B3A6B;
+    color: #1B3A6B;
+    background-color: transparent;
+    font-family: 'Archivo', sans-serif;
+    font-weight: 800;
+    font-size: 14px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .btn-outline-navy:hover {
+    background-color: #1B3A6B;
+    color: #F2EEE5;
+  }
+
+  /* Badge - Vetted */
   .badge-vetted {
     display: inline-flex;
     align-items: center;
-    gap: 0.375rem;
-    padding: 0.375rem 0.75rem;
-    background-color: rgb(217, 164, 65);
-    color: rgb(15, 28, 51);
-    border-radius: 9999px;
-    font-family: "Archivo", sans-serif;
-    font-weight: 700;
-    font-size: 0.875rem;
+    gap: 8px;
+    padding: 4px 9px;
+    background-color: transparent;
+    color: #D9A441;
+    font-family: 'Archivo', sans-serif;
+    font-weight: 800;
+    font-size: 11px;
+    border-radius: 4px;
   }
 
+  /* Container */
   .container-padded {
-    padding-left: 1rem;
-    padding-right: 1rem;
-    max-width: 80rem;
+    padding-left: 40px;
+    padding-right: 40px;
+    max-width: 1240px;
     margin-left: auto;
     margin-right: auto;
   }
 
-  @media (min-width: 768px) {
-    .container-padded {
-      padding-left: 2rem;
-      padding-right: 2rem;
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .container-padded {
-      padding-left: 4rem;
-      padding-right: 4rem;
-    }
-  }
-
+  /* Card */
   .card {
-    background-color: white;
-    padding: 1.5rem;
-    border-radius: 0.5rem;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-    border: 1px solid rgba(138, 133, 124, 0.2);
+    background-color: #FBF9F4;
+    border: 1px solid #D8D2C4;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  /* Eyebrow / Meta text */
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #8A857C;
+  }
+
+  /* Section spacing */
+  .section {
+    padding: 80px 0;
+  }
+
+  /* Grid utilities */
+  .grid-auto-fit-card {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+  }
+
+  .grid-auto-fit-tile {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+  }
+
+  .grid-auto-fit-browse {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+    gap: 20px;
+  }
+}
+
+/* Hatch pattern for photo placeholders */
+@layer utilities {
+  .hatch-pattern {
+    background: repeating-linear-gradient(
+      135deg,
+      #D9D4C8 0px,
+      #D9D4C8 10px,
+      #E4E0D5 10px,
+      #E4E0D5 20px
+    );
+  }
+
+  .hatch-pattern-dark {
+    background: repeating-linear-gradient(
+      135deg,
+      #21447A 0px,
+      #21447A 12px,
+      #1E3E70 12px,
+      #1E3E70 24px
+    );
+  }
+
+  .text-stone {
+    color: #8A857C;
+  }
+
+  .text-ink-60 {
+    color: #55524A;
+  }
+
+  .border-hairline {
+    border: 1px solid #D8D2C4;
+  }
+
+  .border-hairline-inner {
+    border: 1px solid #E6E0D3;
   }
 }

@@ -1,7 +1,7 @@
 export interface Provider {
   id: string;
   name: string;
-  trade: 'cleaning' | 'handyman' | 'electrician' | 'plumber';
+  trade: 'cleaning' | 'handyman' | 'electrician' | 'plumber' | 'snow-removal';
   bio: string;
   location: string;
   serviceArea: string;
@@ -153,6 +153,23 @@ export const mockProviders: Provider[] = [
     services: ['Drywall repair', 'Painting', 'Minor repairs', 'Shelving', 'Door repair'],
     photos: [],
     distance: '16 min away',
+  },
+  {
+    id: '9',
+    name: 'Marco Valentino',
+    trade: 'snow-removal',
+    bio: 'Professional snow removal and salting. Driveways, walkways, parking lots. Fast, reliable, insured.',
+    location: 'Toronto, ON',
+    serviceArea: 'Toronto, Mississauga, Etobicoke',
+    rating: 4.9,
+    reviewCount: 67,
+    priceRange: '$75-$150 per visit',
+    yearsExperience: 14,
+    verified: true,
+    verificationDate: 'March 2026',
+    services: ['Driveway clearing', 'Walkway clearing', 'Salting & de-icing', 'Parking lot snow removal', 'Emergency service'],
+    photos: [],
+    distance: '11 min away',
   },
 ];
 
