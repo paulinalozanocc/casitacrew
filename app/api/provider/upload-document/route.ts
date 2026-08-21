@@ -56,9 +56,9 @@ export async function POST(req: NextRequest) {
       });
 
     if (uploadError) {
-      console.error('Upload error:', uploadError);
+      console.error('Upload error:', JSON.stringify(uploadError));
       return NextResponse.json(
-        { error: 'Failed to upload file' },
+        { error: `Failed to upload file: ${uploadError.message || JSON.stringify(uploadError)}` },
         { status: 500 }
       );
     }
@@ -83,9 +83,9 @@ export async function POST(req: NextRequest) {
       ]);
 
     if (docError) {
-      console.error('Document record error:', docError);
+      console.error('Document record error:', JSON.stringify(docError));
       return NextResponse.json(
-        { error: 'Failed to save document record' },
+        { error: `Failed to save document record: ${docError.message || JSON.stringify(docError)}` },
         { status: 500 }
       );
     }
@@ -96,9 +96,10 @@ export async function POST(req: NextRequest) {
       fileUrl: urlData.publicUrl,
     });
   } catch (error) {
-    console.error('Document upload error:', error);
+    const errorMessage = error instanceof Error ? error.message : JSON.stringify(error);
+    console.error('Document upload error:', errorMessage, error);
     return NextResponse.json(
-      { error: 'Upload failed', details: String(error) },
+      { error: `Upload failed: ${errorMessage}` },
       { status: 500 }
     );
   }
