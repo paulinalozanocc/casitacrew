@@ -2,54 +2,157 @@ import Link from 'next/link';
 
 export default function Footer() {
   return (
-    <footer className="bg-navy text-cream mt-20">
-      <div className="container-padded py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
-          {/* Brand */}
-          <div>
-            <div className="font-lobster text-xl italic mb-2">Casita</div>
-            <div className="font-archivo font-bold tracking-wider mb-4">CREW</div>
-            <p className="text-sm text-cream opacity-80">Vetted trades, no surprises.</p>
+    <footer style={{
+      backgroundColor: '#1B3A6B',
+      color: '#F2EEE5',
+      borderTop: '1px solid rgba(242, 238, 229, 0.1)',
+    }}>
+      <div style={{
+        maxWidth: '1240px',
+        margin: '0 auto',
+        padding: '60px 40px 40px',
+      }}>
+        {/* Top section: Logo + Description */}
+        <div style={{
+          marginBottom: '56px',
+        }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'baseline',
+            gap: '7px',
+            marginBottom: '16px',
+          }}>
+            <span style={{
+              fontFamily: "'Lobster Two', cursive",
+              fontStyle: 'italic',
+              fontWeight: 700,
+              fontSize: '24px',
+              color: '#F2EEE5',
+              lineHeight: 1,
+            }}>Casita</span>
+            <span style={{
+              fontFamily: "'Archivo', sans-serif",
+              fontWeight: 900,
+              fontSize: '14px',
+              color: '#F2EEE5',
+              letterSpacing: '0.18em',
+              lineHeight: 1,
+            }}>CREW</span>
           </div>
+          <p style={{
+            fontFamily: "'Barlow', sans-serif",
+            fontSize: '16px',
+            color: 'rgba(242, 238, 229, 0.8)',
+            margin: 0,
+            lineHeight: 1.5,
+            maxWidth: '280px',
+          }}>
+            Vetted trades, no surprises.
+          </p>
+        </div>
 
-          {/* For Customers */}
+        {/* Link sections grid */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+          gap: '40px',
+          marginBottom: '40px',
+        }}>
+          {/* For customers */}
           <div>
-            <h3 className="font-archivo font-bold mb-4">For customers</h3>
-            <ul className="space-y-2 text-sm">
+            <h3 style={{
+              fontFamily: "'Archivo', sans-serif",
+              fontWeight: 800,
+              fontSize: '16px',
+              color: '#F2EEE5',
+              marginBottom: '12px',
+              margin: '0 0 12px 0',
+            }}>For customers</h3>
+            <ul style={{
+              listStyle: 'none',
+              padding: 0,
+              margin: 0,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '10px',
+            }}>
               <li>
-                <Link href="/browse" className="hover:text-brass transition-colors">
+                <Link href="/browse" style={{
+                  fontFamily: "'Barlow', sans-serif",
+                  fontSize: '15px',
+                  color: 'rgba(242, 238, 229, 0.85)',
+                  textDecoration: 'none',
+                }}>
                   Browse trades
                 </Link>
               </li>
               <li>
-                <Link href="/how-it-works" className="hover:text-brass transition-colors">
+                <Link href="/how-it-works" style={{
+                  fontFamily: "'Barlow', sans-serif",
+                  fontSize: '15px',
+                  color: 'rgba(242, 238, 229, 0.85)',
+                  textDecoration: 'none',
+                }}>
                   How it works
                 </Link>
               </li>
               <li>
-                <Link href="/trust-safety" className="hover:text-brass transition-colors">
+                <Link href="/trust-safety" style={{
+                  fontFamily: "'Barlow', sans-serif",
+                  fontSize: '15px',
+                  color: 'rgba(242, 238, 229, 0.85)',
+                  textDecoration: 'none',
+                }}>
                   Trust & safety
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* For Providers */}
+          {/* For providers */}
           <div>
-            <h3 className="font-archivo font-bold mb-4">For providers</h3>
-            <ul className="space-y-2 text-sm">
+            <h3 style={{
+              fontFamily: "'Archivo', sans-serif",
+              fontWeight: 800,
+              fontSize: '16px',
+              color: '#F2EEE5',
+              margin: '0 0 12px 0',
+            }}>For providers</h3>
+            <ul style={{
+              listStyle: 'none',
+              padding: 0,
+              margin: 0,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '10px',
+            }}>
               <li>
-                <Link href="/pricing" className="hover:text-brass transition-colors">
+                <Link href="/pricing" style={{
+                  fontFamily: "'Barlow', sans-serif",
+                  fontSize: '15px',
+                  color: 'rgba(242, 238, 229, 0.85)',
+                  textDecoration: 'none',
+                }}>
                   Pricing
                 </Link>
               </li>
               <li>
-                <Link href="/provider/signup" className="hover:text-brass transition-colors">
+                <Link href="/provider/signup" style={{
+                  fontFamily: "'Barlow', sans-serif",
+                  fontSize: '15px',
+                  color: 'rgba(242, 238, 229, 0.85)',
+                  textDecoration: 'none',
+                }}>
                   Join as pro
                 </Link>
               </li>
               <li>
-                <Link href="/how-it-works#providers" className="hover:text-brass transition-colors">
+                <Link href="/how-it-works" style={{
+                  fontFamily: "'Barlow', sans-serif",
+                  fontSize: '15px',
+                  color: 'rgba(242, 238, 229, 0.85)',
+                  textDecoration: 'none',
+                }}>
                   Provider guide
                 </Link>
               </li>
@@ -58,20 +161,48 @@ export default function Footer() {
 
           {/* Legal */}
           <div>
-            <h3 className="font-archivo font-bold mb-4">Legal</h3>
-            <ul className="space-y-2 text-sm">
+            <h3 style={{
+              fontFamily: "'Archivo', sans-serif",
+              fontWeight: 800,
+              fontSize: '16px',
+              color: '#F2EEE5',
+              margin: '0 0 12px 0',
+            }}>Legal</h3>
+            <ul style={{
+              listStyle: 'none',
+              padding: 0,
+              margin: 0,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '10px',
+            }}>
               <li>
-                <Link href="/privacy" className="hover:text-brass transition-colors">
+                <Link href="/privacy" style={{
+                  fontFamily: "'Barlow', sans-serif",
+                  fontSize: '15px',
+                  color: 'rgba(242, 238, 229, 0.85)',
+                  textDecoration: 'none',
+                }}>
                   Privacy
                 </Link>
               </li>
               <li>
-                <Link href="/terms" className="hover:text-brass transition-colors">
+                <Link href="/terms" style={{
+                  fontFamily: "'Barlow', sans-serif",
+                  fontSize: '15px',
+                  color: 'rgba(242, 238, 229, 0.85)',
+                  textDecoration: 'none',
+                }}>
                   Terms
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="hover:text-brass transition-colors">
+                <Link href="/contact" style={{
+                  fontFamily: "'Barlow', sans-serif",
+                  fontSize: '15px',
+                  color: 'rgba(242, 238, 229, 0.85)',
+                  textDecoration: 'none',
+                }}>
                   Contact
                 </Link>
               </li>
@@ -79,12 +210,28 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-cream border-opacity-20 pt-8">
-          <p className="text-center text-sm text-cream opacity-80">
+        {/* Bottom section */}
+        <div style={{
+          borderTop: '1px solid rgba(242, 238, 229, 0.1)',
+          paddingTop: '24px',
+          textAlign: 'center',
+        }}>
+          <p style={{
+            fontFamily: "'Barlow', sans-serif",
+            fontSize: '14px',
+            color: 'rgba(242, 238, 229, 0.6)',
+            margin: 0,
+          }}>
             &copy; 2026 CasitaCrew. All rights reserved.
           </p>
-          <p className="text-center text-xs text-cream opacity-60 mt-2">
-            casitacrew.ca | info@casitacrew.ca | 416-555-0134
+          <p style={{
+            fontFamily: "'JetBrains Mono', monospace",
+            fontSize: '12px',
+            color: 'rgba(242, 238, 229, 0.5)',
+            marginTop: '8px',
+            margin: '8px 0 0 0',
+          }}>
+            casitacrew.ca | casitacrew.com | info@casitacrew.ca
           </p>
         </div>
       </div>
