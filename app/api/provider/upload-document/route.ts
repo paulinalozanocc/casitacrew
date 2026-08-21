@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
     const fileName = `${email}/${documentType}/${Date.now()}-${file.name}`;
     const fileBuffer = await file.arrayBuffer();
 
-    const { data: uploadData, error: uploadError } = await supabaseAdmin
+    const { data: uploadData, error: uploadError } = await (supabaseAdmin as any)
       .storage
       .from('verification-documents')
       .upload(fileName, fileBuffer, {
@@ -64,13 +64,13 @@ export async function POST(req: NextRequest) {
     }
 
     // Get public URL
-    const { data: urlData } = supabaseAdmin
+    const { data: urlData } = (supabaseAdmin as any)
       .storage
       .from('verification-documents')
       .getPublicUrl(fileName);
 
     // Store document record in database
-    const { error: docError } = await supabaseAdmin
+    const { error: docError } = await (supabaseAdmin as any)
       .from('verification_documents')
       .insert([
         {
