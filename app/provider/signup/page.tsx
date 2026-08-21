@@ -37,6 +37,9 @@ export default function ProviderSignup() {
     profile?: boolean;
     payment?: boolean;
   }>({});
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -111,6 +114,34 @@ export default function ProviderSignup() {
         paddingTop: '40px',
         paddingBottom: '80px',
       }}>
+        {error && (
+          <div style={{
+            maxWidth: '560px',
+            margin: '0 auto 20px',
+            backgroundColor: '#ffebee',
+            color: '#c62828',
+            padding: '16px',
+            borderRadius: '6px',
+            border: '1px solid #ef5350',
+            fontFamily: "'Barlow', sans-serif",
+          }}>
+            <strong>Error:</strong> {error}
+          </div>
+        )}
+        {successMessage && (
+          <div style={{
+            maxWidth: '560px',
+            margin: '0 auto 20px',
+            backgroundColor: '#e8f5e9',
+            color: '#2e7d32',
+            padding: '16px',
+            borderRadius: '6px',
+            border: '1px solid #4caf50',
+            fontFamily: "'Barlow', sans-serif",
+          }}>
+            <strong>Success:</strong> {successMessage}
+          </div>
+        )}
         {currentStep === 'confirmation' ? (
           // Confirmation screen
           <div style={{
@@ -584,7 +615,6 @@ export default function ProviderSignup() {
                       fontSize: '15px',
                       boxSizing: 'border-box',
                       minHeight: '100px',
-                      fontFamily: "'Barlow', sans-serif",
                     }}
                   />
                 </div>
@@ -768,25 +798,81 @@ export default function ProviderSignup() {
                     Back
                   </button>
                   <button
-                    onClick={() => {
-                      // TODO: Integrate Stripe payment
-                      setCurrentStep('confirmation');
-                      window.scrollTo(0, 0);
+                    onClick={async () => {
+                      setLoading(true);
+                      setError(null);
+                      try {
+                        // Upload documents first
+                        for (const [docType, file] of Object.entries(formData.documents)) {
+                          if (file) {
+                            const uploadFormData = new FormData();
+                            uploadFormData.append('email', formData.email);
+                            uploadFormData.append('documentType', docType);
+                            uploadFormData.append('file', file);
+
+                            const docRes = await fetch('/api/provider/upload-document', {
+                              method: 'POST',
+                              body: uploadFormData,
+                            });
+
+                            if (!docRes.ok) {
+                              const docError = await docRes.json();
+                              throw new Error(`Document upload failed: ${docError.error}`);
+                            }
+                          }
+                        }
+
+                        // Create provider profile
+                        const signupFormData = new FormData();
+                        signupFormData.append('email', formData.email);
+                        signupFormData.append('password', formData.password);
+                        signupFormData.append('name', formData.name);
+                        signupFormData.append('trade', formData.trade);
+                        signupFormData.append('location', formData.location);
+                        signupFormData.append('serviceArea', formData.serviceArea);
+                        signupFormData.append('bio', formData.bio);
+                        signupFormData.append('hourlyRate', formData.hourlyRate);
+                        signupFormData.append('yearsExperience', formData.yearsExperience);
+
+                        const signupRes = await fetch('/api/provider/signup', {
+                          method: 'POST',
+                          body: signupFormData,
+                        });
+
+                        if (!signupRes.ok) {
+                          const signupError = await signupRes.json();
+                          throw new Error(signupError.error || 'Signup failed');
+                        }
+
+                        const signupData = await signupRes.json();
+                        setSuccessMessage('Profile created successfully! Redirecting...');
+                        
+                        // Redirect to confirmation
+                        setTimeout(() => {
+                          setCurrentStep('confirmation');
+                          window.scrollTo(0, 0);
+                        }, 1000);
+                      } catch (err) {
+                        setError(err instanceof Error ? err.message : 'An error occurred');
+                      } finally {
+                        setLoading(false);
+                      }
                     }}
+                    disabled={loading}
                     style={{
                       flex: 1,
                       padding: '12px',
-                      backgroundColor: '#D9A441',
+                      backgroundColor: loading ? '#D8D2C4' : '#D9A441',
                       color: '#1B3A6B',
                       fontFamily: "'Archivo', sans-serif",
                       fontWeight: 800,
                       fontSize: '15px',
                       border: 'none',
                       borderRadius: '5px',
-                      cursor: 'pointer',
+                      cursor: loading ? 'not-allowed' : 'pointer',
                     }}
                   >
-                    Subscribe now
+                    {loading ? 'Processing...' : 'Subscribe now'}
                   </button>
                 </div>
               </div>

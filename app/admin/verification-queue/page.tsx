@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 // Mock data for pending providers
 const mockPendingProviders = [
@@ -50,27 +50,100 @@ const TRADE_NAMES = {
 };
 
 export default function VerificationQueue() {
-  const [providers, setProviders] = useState(mockPendingProviders);
+  const [providers, setProviders] = useState<any[]>([]);
   const [selectedProvider, setSelectedProvider] = useState<string | null>(null);
   const [rejectionReason, setRejectionReason] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [actionLoading, setActionLoading] = useState(false);
 
-  const currentProvider = providers.find(p => p.id === selectedProvider);
+  // Fetch pending providers on mount
+  useEffect(() => {
+    const fetchProviders = async () => {
+      try {
+        setLoading(true);
+        const res = await fetch('/api/admin/pending-providers');
+        if (!res.ok) {
+          throw new Error('Failed to fetch providers');
+        }
+        const data = await res.json();
+        // Map database format to UI format
+        const mapped = data.providers.map((p: any) => ({
+          id: p.id,
+          name: p.name,
+          trade: p.trade,
+          email: p.user_email,
+          location: p.location,
+          submittedAt: new Date(p.created_at).toISOString().split('T')[0],
+          documents: p.documents.reduce((acc: any, doc: any) => {
+            acc[doc.document_type] = { name: doc.file_name, url: doc.file_url, verified: true };
+            return acc;
+          }, {}),
+          requiredDocs: getRequiredDocs(p.trade),
+        }));
+        setProviders(mapped);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to load providers');
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const handleApprove = (providerId: string) => {
-    alert(`✓ ${providers.find(p => p.id === providerId)?.name} has been approved!`);
-    setProviders(providers.filter(p => p.id !== providerId));
-    setSelectedProvider(null);
+    fetchProviders();
+  }, []);
+
+  const getRequiredDocs = (trade: string) => {
+    const docsByTrade: Record<string, string[]> = {
+      cleaning: ['id', 'insurance'],
+      handyman: ['id', 'insurance'],
+      electrician: ['id', 'license', 'insurance', 'wsib'],
+      plumber: ['id', 'license', 'insurance', 'wsib'],
+      'snow-removal': ['id', 'insurance'],
+    };
+    return docsByTrade[trade] || [];
   };
 
-  const handleReject = (providerId: string) => {
+  const currentProvider = providers.find(p => p.email === selectedProvider);
+
+  const handleApprove = async (providerEmail: string) => {
+    setActionLoading(true);
+    try {
+      const res = await fetch('/api/admin/approve-provider', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ providerEmail, notes: '' }),
+      });
+      if (!res.ok) throw new Error('Approval failed');
+      setProviders(providers.filter(p => p.email !== providerEmail));
+      setSelectedProvider(null);
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Approval failed');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleReject = async (providerEmail: string) => {
     if (!rejectionReason.trim()) {
       alert('Please provide a rejection reason');
       return;
     }
-    alert(`Rejected ${providers.find(p => p.id === providerId)?.name} with reason: ${rejectionReason}`);
-    setProviders(providers.filter(p => p.id !== providerId));
-    setRejectionReason('');
-    setSelectedProvider(null);
+    setActionLoading(true);
+    try {
+      const res = await fetch('/api/admin/reject-provider', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ providerEmail, reason: rejectionReason, notes: '' }),
+      });
+      if (!res.ok) throw new Error('Rejection failed');
+      setProviders(providers.filter(p => p.email !== providerEmail));
+      setRejectionReason('');
+      setSelectedProvider(null);
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Rejection failed');
+    } finally {
+      setActionLoading(false);
+    }
   };
 
   return (
@@ -89,11 +162,34 @@ export default function VerificationQueue() {
             Verification queue
           </h1>
           <p style={{ color: '#8A857C', margin: 0, fontSize: '15px' }}>
-            {providers.length} provider{providers.length !== 1 ? 's' : ''} pending approval
+            {loading ? 'Loading...' : `${providers.length} provider${providers.length !== 1 ? 's' : ''} pending approval`}
           </p>
         </div>
 
-        {providers.length === 0 ? (
+        {error && (
+          <div style={{
+            backgroundColor: '#ffebee',
+            color: '#c62828',
+            padding: '16px',
+            borderRadius: '6px',
+            border: '1px solid #ef5350',
+            marginBottom: '20px',
+          }}>
+            <strong>Error:</strong> {error}
+          </div>
+        )}
+
+        {loading ? (
+          <div style={{
+            textAlign: 'center',
+            padding: '60px 40px',
+            backgroundColor: '#FBF9F4',
+            borderRadius: '6px',
+            border: '1px solid #D8D2C4',
+          }}>
+            <p style={{ color: '#8A857C' }}>Loading providers...</p>
+          </div>
+        ) : providers.length === 0 ? (
           <div style={{
             textAlign: 'center',
             padding: '60px 40px',
@@ -144,14 +240,14 @@ export default function VerificationQueue() {
               <div>
                 {providers.map(provider => (
                   <button
-                    key={provider.id}
-                    onClick={() => setSelectedProvider(provider.id)}
+                    key={provider.email}
+                    onClick={() => setSelectedProvider(provider.email)}
                     style={{
                       width: '100%',
                       padding: '16px 20px',
                       border: 'none',
                       borderBottom: '1px solid #D8D2C4',
-                      backgroundColor: selectedProvider === provider.id ? '#E8F5E9' : '#FBF9F4',
+                      backgroundColor: selectedProvider === provider.email ? '#E8F5E9' : '#FBF9F4',
                       cursor: 'pointer',
                       textAlign: 'left',
                       transition: 'background-color 200ms',
@@ -267,7 +363,7 @@ export default function VerificationQueue() {
                   </div>
 
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                    {currentProvider.requiredDocs.map(docType => {
+                    {currentProvider.requiredDocs.map((docType: string) => {
                       const doc = currentProvider.documents[docType as keyof typeof currentProvider.documents];
                       return (
                         <div key={docType} style={{
@@ -344,38 +440,40 @@ export default function VerificationQueue() {
                 {/* Actions */}
                 <div style={{ display: 'flex', gap: '12px' }}>
                   <button
-                    onClick={() => handleReject(currentProvider.id)}
+                    onClick={() => handleReject(currentProvider.email)}
+                    disabled={actionLoading}
                     style={{
                       flex: 1,
                       padding: '12px',
-                      backgroundColor: '#FBF9F4',
-                      color: '#C7472F',
+                      backgroundColor: actionLoading ? '#D8D2C4' : '#FBF9F4',
+                      color: actionLoading ? '#8A857C' : '#C7472F',
                       fontFamily: "'Archivo', sans-serif",
                       fontWeight: 800,
                       fontSize: '14px',
-                      border: '1.5px solid #C7472F',
+                      border: actionLoading ? '1.5px solid #D8D2C4' : '1.5px solid #C7472F',
                       borderRadius: '5px',
-                      cursor: 'pointer',
+                      cursor: actionLoading ? 'not-allowed' : 'pointer',
                     }}
                   >
-                    Reject
+                    {actionLoading ? 'Processing...' : 'Reject'}
                   </button>
                   <button
-                    onClick={() => handleApprove(currentProvider.id)}
+                    onClick={() => handleApprove(currentProvider.email)}
+                    disabled={actionLoading}
                     style={{
                       flex: 1,
                       padding: '12px',
-                      backgroundColor: '#1F5C7A',
-                      color: '#F2EEE5',
+                      backgroundColor: actionLoading ? '#D8D2C4' : '#1F5C7A',
+                      color: actionLoading ? '#8A857C' : '#F2EEE5',
                       fontFamily: "'Archivo', sans-serif",
                       fontWeight: 800,
                       fontSize: '14px',
                       border: 'none',
                       borderRadius: '5px',
-                      cursor: 'pointer',
+                      cursor: actionLoading ? 'not-allowed' : 'pointer',
                     }}
                   >
-                    Approve
+                    {actionLoading ? 'Processing...' : 'Approve'}
                   </button>
                 </div>
               </div>
