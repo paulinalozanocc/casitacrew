@@ -1,15 +1,16 @@
-import { supabaseAdmin } from '@/app/lib/supabase';
+import { getSupabaseAdmin } from '@/app/lib/supabase';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
   try {
+    const supabaseAdmin = getSupabaseAdmin();
     if (!supabaseAdmin) {
       return NextResponse.json({ error: 'Admin client not available' }, { status: 500 });
     }
 
     // Test connection
     try {
-      await supabaseAdmin.from('_').select().limit(0);
+      await (supabaseAdmin as any).from('provider_profiles').select().limit(0);
     } catch {
       // Ignore connection test error
     }

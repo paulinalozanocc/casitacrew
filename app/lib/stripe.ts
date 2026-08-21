@@ -1,12 +1,26 @@
 import Stripe from 'stripe';
 
-const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+let stripeInstance: Stripe | null = null;
 
-if (!stripeSecretKey) {
-  throw new Error('Missing Stripe secret key');
+function getStripe() {
+  if (!stripeInstance) {
+    const key = process.env.STRIPE_SECRET_KEY;
+    if (!key) {
+      throw new Error('Missing Stripe secret key');
+    }
+    stripeInstance = new Stripe(key);
+  }
+  return stripeInstance;
 }
 
-export const stripe = new Stripe(stripeSecretKey);
+export const stripe = {
+  get subscriptions() {
+    return getStripe().subscriptions;
+  },
+  get customers() {
+    return getStripe().customers;
+  },
+};
 
 // Create a subscription for $9/month
 export async function createSubscription(customerId: string) {

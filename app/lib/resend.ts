@@ -1,12 +1,23 @@
 import { Resend } from 'resend';
 
-const resendApiKey = process.env.RESEND_API_KEY;
+let resendInstance: Resend | null = null;
 
-if (!resendApiKey) {
-  throw new Error('Missing Resend API key');
+function getResend() {
+  if (!resendInstance) {
+    const key = process.env.RESEND_API_KEY;
+    if (!key) {
+      throw new Error('Missing Resend API key');
+    }
+    resendInstance = new Resend(key);
+  }
+  return resendInstance;
 }
 
-export const resend = new Resend(resendApiKey);
+export const resend = {
+  get emails() {
+    return getResend().emails;
+  },
+};
 
 export async function sendProviderSignupConfirmation(email: string, name: string) {
   try {
