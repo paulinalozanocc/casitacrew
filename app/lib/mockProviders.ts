@@ -32,7 +32,7 @@ export const mockProviders: Provider[] = [
     verified: true,
     verificationDate: 'March 2026',
     services: ['Leak repair', 'Drain cleaning', 'Fixture installation', 'Water heater', 'Pipe replacement'],
-    photos: [],
+    photos: ['/providers/plumber-1.jpg'],
     distance: '12 min away',
   },
   {
@@ -49,7 +49,7 @@ export const mockProviders: Provider[] = [
     verified: true,
     verificationDate: 'February 2026',
     services: ['Deep clean', 'Weekly maintenance', 'Move-in/out cleaning', 'Post-construction', 'Eco-friendly products'],
-    photos: [],
+    photos: ['/providers/cleaner-1.jpg'],
     distance: '8 min away',
   },
   {
@@ -66,7 +66,7 @@ export const mockProviders: Provider[] = [
     verified: true,
     verificationDate: 'January 2026',
     services: ['Rewiring', 'Panel upgrades', 'Outlet installation', 'Troubleshooting', 'Emergency service'],
-    photos: [],
+    photos: ['/providers/electrician-1.jpg'],
     distance: '18 min away',
   },
   {
@@ -83,7 +83,7 @@ export const mockProviders: Provider[] = [
     verified: true,
     verificationDate: 'March 2026',
     services: ['Drywall repair', 'Mounting', 'Shelving', 'Door installation', 'General repairs'],
-    photos: [],
+    photos: ['/providers/handyman-1.jpg'],
     distance: '22 min away',
   },
   {
@@ -100,7 +100,7 @@ export const mockProviders: Provider[] = [
     verified: true,
     verificationDate: 'February 2026',
     services: ['Deep clean', 'Regular cleaning', 'Window cleaning', 'Move-in/out'],
-    photos: [],
+    photos: ['/providers/cleaner-2.jpg'],
     distance: '15 min away',
   },
   {
@@ -117,7 +117,7 @@ export const mockProviders: Provider[] = [
     verified: true,
     verificationDate: 'March 2026',
     services: ['Kitchen upgrades', 'Bathroom lighting', 'Outlet replacement', 'Troubleshooting', 'Free estimates'],
-    photos: [],
+    photos: ['/providers/electrician-2.jpg'],
     distance: '10 min away',
   },
   {
@@ -134,7 +134,7 @@ export const mockProviders: Provider[] = [
     verified: true,
     verificationDate: 'January 2026',
     services: ['Drain cleaning', 'Leak repair', 'Fixture installation', 'Water heater', 'Emergency service'],
-    photos: [],
+    photos: ['/providers/plumber-2.jpg'],
     distance: '14 min away',
   },
   {
@@ -151,7 +151,7 @@ export const mockProviders: Provider[] = [
     verified: true,
     verificationDate: 'February 2026',
     services: ['Drywall repair', 'Painting', 'Minor repairs', 'Shelving', 'Door repair'],
-    photos: [],
+    photos: ['/providers/handyman-2.jpg'],
     distance: '16 min away',
   },
   {
@@ -168,7 +168,7 @@ export const mockProviders: Provider[] = [
     verified: true,
     verificationDate: 'March 2026',
     services: ['Driveway clearing', 'Walkway clearing', 'Salting & de-icing', 'Parking lot snow removal', 'Emergency service'],
-    photos: [],
+    photos: ['/providers/snow-removal-1.jpg'],
     distance: '11 min away',
   },
 ];
