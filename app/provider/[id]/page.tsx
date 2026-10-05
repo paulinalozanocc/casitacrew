@@ -1,9 +1,12 @@
 import Link from 'next/link';
 import { getProviderById } from '../../lib/mockProviders';
 import { notFound } from 'next/navigation';
+import RequestServiceForm from '../../components/RequestServiceForm';
 
-export default function ProviderProfilePage({ params }: { params: { id: string } }) {
-  const provider = getProviderById(params.id);
+export default async function ProviderProfilePage({ params }: { params: Promise<{ id: string }> }) {
+  // Next.js 16: params is a Promise and must be awaited (sync access made every profile 404).
+  const { id } = await params;
+  const provider = getProviderById(id);
 
   if (!provider) {
     notFound();
@@ -175,12 +178,10 @@ export default function ProviderProfilePage({ params }: { params: { id: string }
             <div className="card sticky top-4 space-y-6">
               <div>
                 <h3 className="font-bold text-navy mb-2 font-archivo">Get in touch</h3>
-                <p className="text-sm text-stone">Message {provider.name.split(' ')[0]} to discuss your project and get a quote.</p>
+                <p className="text-sm text-stone">Tell us about the job. We&apos;ll confirm {provider.name.split(' ')[0]}&apos;s availability and price by email.</p>
               </div>
 
-              <button className="w-full btn-primary">Message {provider.name.split(' ')[0]}</button>
-
-              <button className="w-full btn-secondary">Request this job</button>
+              <RequestServiceForm providerId={provider.id} providerFirstName={provider.name.split(' ')[0]} />
 
               <hr className="border-stone border-opacity-20" />
 
@@ -219,8 +220,8 @@ export default function ProviderProfilePage({ params }: { params: { id: string }
       <section className="bg-navy text-cream py-16 mt-20">
         <div className="container-padded text-center space-y-6">
           <h2 className="text-cream">Ready to book?</h2>
-          <p className="text-lg opacity-90">Start a conversation with {provider.name.split(' ')[0]} today.</p>
-          <button className="btn-primary inline-block">Send a message</button>
+          <p className="text-lg opacity-90">Tell us what needs doing. It&apos;s free to ask.</p>
+          <a href="#request" className="btn-outline inline-block">Request {provider.name.split(' ')[0]}</a>
         </div>
       </section>
     </>

@@ -13,6 +13,20 @@ function getResend() {
   return resendInstance;
 }
 
+// Resend only sends from verified domains. mail.casitacrew.com is the verified
+// sending subdomain; override with RESEND_FROM if that ever changes.
+export const FROM_EMAIL = process.env.RESEND_FROM ?? 'CasitaCrew <noreply@mail.casitacrew.com>';
+export const ADMIN_EMAIL = process.env.ADMIN_NOTIFY_EMAIL ?? 'info@casitacrew.ca';
+
+export function escapeHtml(value: unknown) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 export const resend = {
   get emails() {
     return getResend().emails;
@@ -22,7 +36,7 @@ export const resend = {
 export async function sendProviderSignupConfirmation(email: string, name: string) {
   try {
     await resend.emails.send({
-      from: 'noreply@casitacrew.ca',
+      from: FROM_EMAIL,
       to: email,
       subject: 'Welcome to CasitaCrew — Application Received',
       html: `
@@ -48,7 +62,7 @@ export async function sendProviderSignupConfirmation(email: string, name: string
 export async function sendProviderApproved(email: string, name: string) {
   try {
     await resend.emails.send({
-      from: 'noreply@casitacrew.ca',
+      from: FROM_EMAIL,
       to: email,
       subject: '✓ You\'re approved! Profile is now live.',
       html: `
@@ -75,7 +89,7 @@ export async function sendProviderApproved(email: string, name: string) {
 export async function sendProviderRejected(email: string, name: string, reason: string) {
   try {
     await resend.emails.send({
-      from: 'noreply@casitacrew.ca',
+      from: FROM_EMAIL,
       to: email,
       subject: 'Application Update',
       html: `
@@ -104,7 +118,7 @@ export async function sendAdminNotification(
   try {
     const actionText = action === 'new_submission' ? 'New provider application submitted' : '';
     await resend.emails.send({
-      from: 'noreply@casitacrew.ca',
+      from: FROM_EMAIL,
       to: adminEmail,
       subject: `[CasitaCrew Admin] ${actionText}`,
       html: `
@@ -118,5 +132,65 @@ export async function sendAdminNotification(
     });
   } catch (error) {
     console.error('Failed to send admin notification:', error);
+  }
+}
+
+export interface JobInquiryEmail {
+  id: string;
+  providerName: string;
+  trade: string;
+  customerName: string;
+  customerEmail: string;
+  customerPhone?: string | null;
+  neighbourhood: string;
+  jobDescription: string;
+  preferredDate?: string | null;
+}
+
+// Goes to CasitaCrew (info@casitacrew.ca) so a real provider can be matched by hand.
+export async function sendJobInquiryToAdmin(j: JobInquiryEmail) {
+  const e = escapeHtml;
+  return resend.emails.send({
+    from: FROM_EMAIL,
+    to: ADMIN_EMAIL,
+    replyTo: j.customerEmail,
+    subject: `New job request: ${j.trade} in ${j.neighbourhood}`,
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2 style="color:#1B3A6B;">New job request</h2>
+        <p><strong>Requested pro:</strong> ${e(j.providerName)} (${e(j.trade)})</p>
+        <p><strong>Customer:</strong> ${e(j.customerName)}<br/>
+           <strong>Email:</strong> ${e(j.customerEmail)}<br/>
+           <strong>Phone:</strong> ${e(j.customerPhone || 'not given')}</p>
+        <p><strong>Neighbourhood:</strong> ${e(j.neighbourhood)}<br/>
+           <strong>Preferred date:</strong> ${e(j.preferredDate || 'flexible')}</p>
+        <p><strong>The job:</strong></p>
+        <p style="white-space:pre-wrap;background:#F2EEE5;padding:12px;border-radius:4px;">${e(j.jobDescription)}</p>
+        <p style="color:#8A857C;font-size:12px;">Reply to this email to reach the customer directly. Request ID: ${e(j.id)}</p>
+      </div>
+    `,
+  });
+}
+
+export async function sendJobInquiryReceipt(j: JobInquiryEmail) {
+  const e = escapeHtml;
+  try {
+    await resend.emails.send({
+      from: FROM_EMAIL,
+      to: j.customerEmail,
+      replyTo: ADMIN_EMAIL,
+      subject: 'We got your request',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color:#1B3A6B;">Thanks, ${e(j.customerName.split(' ')[0])}. We got your request.</h2>
+          <p>You asked about ${e(j.trade)} work in ${e(j.neighbourhood)}. We'll confirm a vetted pro and their price with you by email, usually within one business day.</p>
+          <p>Nothing is booked and you owe nothing until you agree the price.</p>
+          <p>Questions? Just reply to this email.</p>
+          <p style="color:#999;font-size:12px;">CasitaCrew · Vetted trades, no surprises.</p>
+        </div>
+      `,
+    });
+  } catch (error) {
+    console.error('Failed to send inquiry receipt:', error);
   }
 }
