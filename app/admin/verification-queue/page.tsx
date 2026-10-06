@@ -76,7 +76,7 @@ export default function VerificationQueue() {
           location: p.location,
           submittedAt: new Date(p.created_at).toISOString().split('T')[0],
           documents: p.documents.reduce((acc: any, doc: any) => {
-            acc[doc.document_type] = { name: doc.file_name, url: doc.file_url, verified: true };
+            acc[doc.document_type] = { name: doc.file_name, url: doc.signed_url };
             return acc;
           }, {}),
           requiredDocs: getRequiredDocs(p.trade),
@@ -368,9 +368,9 @@ export default function VerificationQueue() {
                       return (
                         <div key={docType} style={{
                           padding: '12px',
-                          backgroundColor: '#E8F5E9',
+                          backgroundColor: doc ? '#FBF9F4' : '#FDECEA',
                           borderRadius: '4px',
-                          border: '1px solid #C8E6C9',
+                          border: doc ? '1px solid #D8D2C4' : '1px solid #C7472F',
                           display: 'flex',
                           justifyContent: 'space-between',
                           alignItems: 'center',
@@ -384,25 +384,25 @@ export default function VerificationQueue() {
                             }}>
                               {DOCUMENT_LABELS[docType as keyof typeof DOCUMENT_LABELS]}
                             </div>
-                            {doc && (
-                              <div style={{
-                                fontFamily: "'JetBrains Mono', monospace",
-                                fontSize: '12px',
-                                color: '#8A857C',
-                              }}>
-                                {doc.name}
-                              </div>
-                            )}
+                            <div style={{
+                              fontFamily: "'JetBrains Mono', monospace",
+                              fontSize: '12px',
+                              color: doc ? '#8A857C' : '#C7472F',
+                            }}>
+                              {doc ? doc.name : 'Not uploaded'}
+                            </div>
                           </div>
-                          <a href="#" style={{
-                            color: '#1F5C7A',
-                            fontFamily: "'Archivo', sans-serif",
-                            fontWeight: 600,
-                            fontSize: '13px',
-                            textDecoration: 'none',
-                          }}>
-                            View
-                          </a>
+                          {doc?.url && (
+                            <a href={doc.url} target="_blank" rel="noopener noreferrer" style={{
+                              color: '#1F5C7A',
+                              fontFamily: "'Archivo', sans-serif",
+                              fontWeight: 600,
+                              fontSize: '13px',
+                              textDecoration: 'none',
+                            }}>
+                              View
+                            </a>
+                          )}
                         </div>
                       );
                     })}
